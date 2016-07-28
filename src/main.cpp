@@ -7,9 +7,6 @@ COMP:
 0
 2,3
 B4,B5
-
-JMP i JPF is broken- needs to be fixed
-
 */
 
 HINSTANCE gDllInstance = NULL;
@@ -73,26 +70,25 @@ extern "C"
 	{
 	TestMusic(38u, 0x7F, 0,0); //41u
 	}
-	*/
-#pragma endregion
-
 	_declspec(dllexport) void PlayMovieTest() //function test
 	{
-		signed int(*MovieTest)(unsigned __int8 PAKFile, unsigned __int8 MovieID) = ((signed int(*)(unsigned __int8, unsigned __int8))0x00559F70);
-		MovieTest(1u, 0u);
+	signed int(*MovieTest)(unsigned __int8 PAKFile, unsigned __int8 MovieID) = ((signed int(*)(unsigned __int8, unsigned __int8))0x00559F70);
+	MovieTest(1u, 0u);
 	}
 	_declspec(dllexport) void _PlayMusic()
 	{
-		signed int(*MusicPlaying)(char *AKAO) = ((signed int(*)(char *AKAO))0x0046B500);
-		char AK[] = "AKAO ";
-		AK[4] = 0x3C; //Set number
-		for (int i = 0x20; i != 0x64; i++)
-		{
-			AK[4] = i;
-			MusicPlaying(AK);
-			Sleep(10000);
-		}
+	signed int(*MusicPlaying)(char *AKAO) = ((signed int(*)(char *AKAO))0x0046B500);
+	char AK[] = "AKAO ";
+	AK[4] = 0x3C; //Set number
+	for (int i = 0x20; i != 0x64; i++)
+	{
+	AK[4] = i;
+	MusicPlaying(AK);
+	Sleep(10000);
 	}
+	}
+	*/
+#pragma endregion
 
 	void SSIGPU()
 	{
@@ -100,7 +96,7 @@ extern "C"
 		SSIGPU_Initialize();
 	}
 
-	/*_declspec(dllexport)*/ void Start()
+	void Start()
 	{
 		AllocConsole();
 		freopen("CON", "w", stdout);
@@ -209,14 +205,14 @@ extern "C"
 
 	void JMP(int a1)
 	{
-		signed int(*JMP)(signed int jump) = ((signed int(*)(signed int))(_JMP + _entry));
-		int result = (JMP(a1 & 0xFFFF)&0xFF);
+		signed int(*JMP)(unsigned int _a1,signed int jump) = ((signed int(*)(unsigned int,signed int))(_JMP + _entry));
+		int result = JMP(ENTRY, a1);
 		printf("\nJMP returned: %d\n", result);
 	}
 	void JPF(int a1)
 	{
-		signed int(*JPF)(signed int jump) = ((signed int(*)(signed int))(_JPF + _entry));
-		int result = (JPF(a1 & 0xFFFF) & 0xFF);
+		signed int(*JPF)(unsigned int _a1,signed int jump) = ((signed int(*)(unsigned int,signed int))(_JPF + _entry));
+		int result = JPF(ENTRY, a1);
 		printf("\nJPF returned: %d\n", result);
 	}
 
