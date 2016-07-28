@@ -8,6 +8,8 @@ COMP:
 2,3
 B4,B5
 
+JMP i JPF is broken- needs to be fixed
+
 */
 
 HINSTANCE gDllInstance = NULL;
@@ -28,12 +30,14 @@ extern "C"
 	int RecognizeScript(char input[]);
 
 	//script functions
+	void Start();
 	void JMP(int a1);
 	void JPF(int a1);
 	void MUSICLOAD(int music);
 	void MUSICCHANGE();
 	void MOVIEREADY(int a1);
 	void NoArgumentFunction(int function, char funce[]);
+	void SSIGPU();
 
 //DEF:
 	//signed int(*PlaySystemSound)(unsigned int Sound_ID) = ((signed int(*)(unsigned int))0x0046B270);
@@ -43,6 +47,7 @@ extern "C"
         if (ul_reason_for_call == DLL_PROCESS_ATTACH)
         {
             gDllInstance = hModule;
+			Start();
         }
         return TRUE;
     }
@@ -89,13 +94,13 @@ extern "C"
 		}
 	}
 
-	_declspec(dllexport) void SSIGPU()
+	void SSIGPU()
 	{
 		signed int(*SSIGPU_Initialize)() = ((signed int(*)())0x0045C320);
 		SSIGPU_Initialize();
 	}
 
-	_declspec(dllexport) void Start()
+	/*_declspec(dllexport)*/ void Start()
 	{
 		AllocConsole();
 		freopen("CON", "w", stdout);
@@ -158,6 +163,12 @@ extern "C"
 			int movie = 0;
 			scanf("%d", &movie);
 			MOVIEREADY(movie);
+			return 0;
+		}
+		if (!strcmp(input, "SSIGPU"))
+		{
+			printf("Custom function: SSIGPU();");
+			SSIGPU();
 			return 0;
 		}
 		return 1;
