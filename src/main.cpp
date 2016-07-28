@@ -1,5 +1,7 @@
 #include <windows.h>
 #include <cstdio>
+#pragma warning(disable : 4996)
+
 
 HINSTANCE gDllInstance = NULL;
 
