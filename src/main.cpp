@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <cstdio>
+#include <cstring>
 #pragma warning(disable : 4996)
 
 /*
@@ -13,7 +14,7 @@ HINSTANCE gDllInstance = NULL;
 
 extern "C"
 {
-	const int _entry = 0x00;
+	int _entry = 0x00;
 	const int _NOP = 0x51BFB0;
 	const int _JMP = 0x51C320;
 	const int _JPF = 0x51C340;
@@ -23,11 +24,15 @@ extern "C"
 	const int _MOVIEREADY = 0x51F110;
 	const int ENTRY = 0x0188C810;
 
+	//Entry Calculator
+	const unsigned char musicloadB[] = { 0x8B,0x54,0x24, 0x04, 0xB8, 0x01,0,0,0,0x56 };
+
 	//core functions
 	int RecognizeScript(char input[]);
 
 	//script functions
 	void Start();
+	void Init();
 	void JMP(int a1);
 	void JPF(int a1);
 	void MUSICLOAD(int music);
@@ -35,6 +40,7 @@ extern "C"
 	void MOVIEREADY(int a1);
 	void NoArgumentFunction(int function, char funce[]);
 	void SSIGPU();
+	int SearchENTRY();
 
 //DEF:
 	//signed int(*PlaySystemSound)(unsigned int Sound_ID) = ((signed int(*)(unsigned int))0x0046B270);
@@ -89,6 +95,16 @@ extern "C"
 	}
 	*/
 #pragma endregion
+	
+	//http://stackoverflow.com/questions/5308734/how-can-i-search-for-substring-in-a-buffer-that-contains-null
+	char *search_buffer(char *haystack, size_t haystacklen, char *needle, size_t needlelen)
+	{
+		int searchlen = haystacklen - needlelen + 1;
+		for (; searchlen-- > 0; haystack++)
+			if (!memcmp(haystack, needle, needlelen))
+				return haystack;
+		return NULL;
+	}
 
 	void SSIGPU()
 	{
@@ -96,11 +112,35 @@ extern "C"
 		SSIGPU_Initialize();
 	}
 
+	void Init()
+	{
+		unsigned char* c = (unsigned char*)_MUSICLOAD;
+		int safeHandle = 0;
+		for (int i = 0; i != 9; i++)
+			if (*c++ == musicloadB[i])
+				safeHandle++;
+		_entry = safeHandle > 8 ? 0 : SearchENTRY();
+	}
+
+	int SearchENTRY()
+	{
+		size_t musicLoadB_t = sizeof(musicloadB) - 1;
+		char* buffer[2048 * 12];
+		int* startAddress = (int*)_MUSICLOAD - (2048 * 6);
+		memcpy(buffer, startAddress, sizeof(buffer));
+		char* c = search_buffer((char*)buffer, sizeof(buffer) - 1, (char*)musicloadB, musicLoadB_t);
+		if (c == NULL)
+			return 0;
+		c -= 2048 * 6;
+		return (int)c - (int)buffer;
+	}
+
 	void Start()
 	{
 		AllocConsole();
 		freopen("CON", "w", stdout);
 		freopen("CON", "r", stdin);
+		Init();
 		bool bFirstMessage = false;
 		while (true)
 		{
@@ -112,8 +152,10 @@ extern "C"
 			printf("> ");
 			scanf("%79s", buffer);
 			int a = RecognizeScript(buffer);
-			if (a == 1)
+			if (a == 1) {
 				printf("\nUNRECOGNIZED OPERATION!\n");
+				Init();
+			}
 		}
 	}
 #pragma region ScriptRecognizer
