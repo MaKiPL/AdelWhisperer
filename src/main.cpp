@@ -132,7 +132,7 @@ extern "C"
 		char* c = search_buffer((char*)buffer, sizeof(buffer) - 1, (char*)musicloadB, musicLoadB_t);
 		if (c == NULL)
 			return 0;
-		c -= 2048 * 6;
+		c -= 2048 * 24;
 		return (int)c - (int)buffer;
 	}
 
