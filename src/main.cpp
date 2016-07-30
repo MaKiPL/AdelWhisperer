@@ -22,7 +22,7 @@ extern "C"
 	const int _MUSICCHANGE = 0x51F640;
 	const int _MOVIE = 0x51F1E0;
 	const int _MOVIEREADY = 0x51F110;
-	const int ENTRY = 0x0188C810;
+	int ENTRY = 0x0188C810;
 
 	//Entry Calculator
 	const unsigned char musicloadB[] = { 0x8B,0x54,0x24, 0x04, 0xB8, 0x01,0,0,0,0x56 };
@@ -120,9 +120,10 @@ extern "C"
 			if (*c++ == musicloadB[i])
 				safeHandle++;
 		_entry = safeHandle > 8 ? 0 : SearchENTRY();
+		ENTRY += _entry;
 	}
 
-	int SearchENTRY()
+	signed int SearchENTRY()
 	{
 		size_t musicLoadB_t = sizeof(musicloadB) - 1;
 		char* buffer[2048 * 12];
