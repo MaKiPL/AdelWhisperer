@@ -22,7 +22,7 @@ extern "C"
 	const int _MUSICCHANGE = 0x51F640;
 	const int _MOVIE = 0x51F1E0;
 	const int _MOVIEREADY = 0x51F110;
-	const int* _ENTRYPOINTER = (int*)0x01D9D028;
+	int* _ENTRYPOINTER = (int*)0x01D9D028;
 	int ENTRY = 0x0188C810;
 
 	//Entry Calculator
@@ -116,6 +116,7 @@ extern "C"
 
 	void SetStackEntry()
 	{
+		_ENTRYPOINTER += _entry;
 		if (*_ENTRYPOINTER != 00)
 		{
 			ENTRY = *_ENTRYPOINTER;
@@ -143,7 +144,6 @@ extern "C"
 				safeHandle++;
 		_entry = safeHandle > 8 ? 0 : SearchENTRY();
 		SetStackEntry();
-		ENTRY += _entry;
 	}
 
 	signed int SearchENTRY()
