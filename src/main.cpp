@@ -22,6 +22,7 @@ extern "C"
 	const int _MUSICCHANGE = 0x51F640;
 	const int _MOVIE = 0x51F1E0;
 	const int _MOVIEREADY = 0x51F110;
+	const int* _ENTRYPOINTER = (int*)0x01D9D028;
 	int ENTRY = 0x0188C810;
 
 	//Entry Calculator
@@ -33,6 +34,7 @@ extern "C"
 	//script functions
 	void Start();
 	void Init();
+	void SetStackEntry();
 	void JMP(int a1);
 	void JPF(int a1);
 	void MUSICLOAD(int music);
@@ -95,7 +97,7 @@ extern "C"
 	}
 	*/
 #pragma endregion
-	
+#pragma region Core
 	//http://stackoverflow.com/questions/5308734/how-can-i-search-for-substring-in-a-buffer-that-contains-null
 	char *search_buffer(char *haystack, size_t haystacklen, char *needle, size_t needlelen)
 	{
@@ -112,6 +114,26 @@ extern "C"
 		SSIGPU_Initialize();
 	}
 
+	void SetStackEntry()
+	{
+		if (*_ENTRYPOINTER != 00)
+		{
+			ENTRY = *_ENTRYPOINTER;
+			return;
+		}
+		if (*_ENTRYPOINTER+4 != 00)
+		{
+			ENTRY = *_ENTRYPOINTER;
+			return;
+		}
+		if (*_ENTRYPOINTER+8 != 00)
+		{
+			ENTRY = *_ENTRYPOINTER;
+			return;
+		}
+		ENTRY = 0x0188C810;
+	}
+
 	void Init()
 	{
 		unsigned char* c = (unsigned char*)_MUSICLOAD;
@@ -120,6 +142,7 @@ extern "C"
 			if (*c++ == musicloadB[i])
 				safeHandle++;
 		_entry = safeHandle > 8 ? 0 : SearchENTRY();
+		SetStackEntry();
 		ENTRY += _entry;
 	}
 
@@ -159,9 +182,11 @@ extern "C"
 			}
 		}
 	}
+#pragma endregion
 #pragma region ScriptRecognizer
 	int RecognizeScript(char input[])
 	{
+		SetStackEntry();
 		if (!strcmp(input, "MUSICLOAD"))
 		{
 			printf("\nMUSICLOAD::MusicID= ");
@@ -214,6 +239,9 @@ extern "C"
 	}
 #pragma endregion
 
+#pragma region ScriptParser
+
+
 	void MUSICLOAD(int music)
 	{
 		byte* b = (byte*)(ENTRY + 0x184); //MOV AL, [EDX+184h] (MOVSX ECX, AL)
@@ -265,4 +293,5 @@ extern "C"
 		int result = func();
 		printf("\n%s returned: %d\n", funce,result);
 	}
+#pragma endregion
 }
