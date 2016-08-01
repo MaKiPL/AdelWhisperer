@@ -126,29 +126,29 @@ extern "C"
 			ENTRY = *_ENTRYPOINTER;
 			return;
 		}
-		if (*_ENTRYPOINTER+4 != 00)
+		if (*(_ENTRYPOINTER+4) != 00)
 		{
-			ENTRY = *_ENTRYPOINTER;
+			ENTRY = *(_ENTRYPOINTER+4);
 			return;
 		}
-		if (*_ENTRYPOINTER+8 != 00)
+		if (*(_ENTRYPOINTER + 8) != 00)
 		{
-			ENTRY = *_ENTRYPOINTER;
+			ENTRY = *(_ENTRYPOINTER + 8);
 			return;
 		}
-		if (*_ENTRYPOINTER + 0xC != 00)
+		if (*(_ENTRYPOINTER + 0xC) != 00)
 		{
-			ENTRY = *_ENTRYPOINTER;
+			ENTRY = *(_ENTRYPOINTER + 0xC);
 			return;
 		}
-		if (*_ENTRYPOINTER - 4 != 00)
+		if (*(_ENTRYPOINTER - 4) != 00)
 		{
-			ENTRY = *_ENTRYPOINTER;
+			ENTRY = *(_ENTRYPOINTER - 4);
 			return;
 		}
-		if (*_ENTRYPOINTER -8 != 00)
+		if (*(_ENTRYPOINTER - 8) != 00)
 		{
-			ENTRY = *_ENTRYPOINTER;
+			ENTRY = *(_ENTRYPOINTER - 8);
 			return;
 		}
 		ENTRY = 0x0188C810;
