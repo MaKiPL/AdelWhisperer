@@ -22,7 +22,9 @@ extern "C"
 	const int _MUSICCHANGE = 0x51F640;
 	const int _MOVIE = 0x51F1E0;
 	const int _MOVIEREADY = 0x51F110;
-	int* _ENTRYPOINTER = (int*)0x01D9D028;
+	const int _SETBATTLEMUSIC = 0x51F550;
+	const int _BATTLE = 0x5230C0;
+	int* _ENTRYPOINTER = (int*)0x01D9D040;
 	int ENTRY = 0x0188C810;
 
 	//Entry Calculator
@@ -40,6 +42,8 @@ extern "C"
 	void MUSICLOAD(int music);
 	void MUSICCHANGE();
 	void MOVIEREADY(int a1);
+	void SETBATTLEMUSIC(int music);
+	void BATTLE(int encounter);
 	void NoArgumentFunction(int function, char funce[]);
 	void SSIGPU();
 	int SearchENTRY();
@@ -117,7 +121,7 @@ extern "C"
 	void SetStackEntry()
 	{
 		_ENTRYPOINTER += _entry;
-		if (*_ENTRYPOINTER != 00)
+		if (*_ENTRYPOINTER != 00) //DIRECTOR
 		{
 			ENTRY = *_ENTRYPOINTER;
 			return;
@@ -128,6 +132,21 @@ extern "C"
 			return;
 		}
 		if (*_ENTRYPOINTER+8 != 00)
+		{
+			ENTRY = *_ENTRYPOINTER;
+			return;
+		}
+		if (*_ENTRYPOINTER + 0xC != 00)
+		{
+			ENTRY = *_ENTRYPOINTER;
+			return;
+		}
+		if (*_ENTRYPOINTER - 4 != 00)
+		{
+			ENTRY = *_ENTRYPOINTER;
+			return;
+		}
+		if (*_ENTRYPOINTER -8 != 00)
 		{
 			ENTRY = *_ENTRYPOINTER;
 			return;
@@ -229,6 +248,22 @@ extern "C"
 			MOVIEREADY(movie);
 			return 0;
 		}
+		if (!strcmp(input, "SETBATTLEMUSIC"))
+		{
+			printf("SETBATTLEMUSIC::MusicID= ");
+			int music = 0;
+			scanf("%d", &music);
+			SETBATTLEMUSIC(music);
+			return 0;
+		}
+		if (!strcmp(input, "BATTLE"))
+		{
+			printf("BATTLE::EncounterID= ");
+			int music = 0;
+			scanf("%d", &music);
+			BATTLE(music);
+			return 0;
+		}
 		if (!strcmp(input, "SSIGPU"))
 		{
 			printf("Custom function: SSIGPU();");
@@ -267,6 +302,17 @@ extern "C"
 		printf("\nMOVIEREADY returned: %d\n", a);
 	}
 
+	void SETBATTLEMUSIC(int music)
+	{
+		byte* b = (byte*)(ENTRY + 0x184); //MOV AL, [EDX+184h] (MOVSX ECX, AL)
+		*b = 4;
+		byte* moviepo = (byte*)(ENTRY + *b * 4); //stack pointer
+		*moviepo = (byte)(music & 0xFF);
+		signed int(*Func)(int a1) = ((signed int(*)(int))(_SETBATTLEMUSIC + _entry));
+		int a = Func(ENTRY);
+		printf("\nSETBATTLEMUSIC returned: %d\n", a);
+	}
+
 	void MUSICCHANGE()
 	{
 		signed int(*MusicChange)() = ((signed int(*)())(_MUSICCHANGE + _entry));
@@ -285,6 +331,18 @@ extern "C"
 		signed int(*JPF)(unsigned int _a1,signed int jump) = ((signed int(*)(unsigned int,signed int))(_JPF + _entry));
 		int result = JPF(ENTRY, a1);
 		printf("\nJPF returned: %d\n", result);
+	}
+	void BATTLE(int encounter)
+	{
+		byte* b = (byte*)(ENTRY + 0x184); //MOV AL, [EDX+184h] (MOVSX ECX, AL)
+		*b = 9;
+		UINT16* moviepo = (UINT16*)(ENTRY + *b * 4 - 4); //stack pointer
+		*moviepo = (UINT16)(encounter & 0xFFFF);
+		moviepo = (UINT16*)(ENTRY + *b * 4);
+		*moviepo = 0x0000;
+		signed int(*Func)(int a1) = ((signed int(*)(int))(_BATTLE + _entry));
+		int result = Func(ENTRY);
+		printf("\nBATTLE returned: %d\n", result);
 	}
 
 	void NoArgumentFunction(int function, char funce[])
