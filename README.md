@@ -1,0 +1,1 @@
+With this injectable DLL you can talk with engine. Remember field scripts? You can call any script and custom hidden functions from allocated console! Thanks to extensive reverse engineering it's possible to call any script even in menu! 
