@@ -341,8 +341,42 @@ extern "C"
 			OneArgumentFunction(_MENUSHOP, input, argument, 9, 'b');
 			return 0;
 		}
-
-
+		if (!strcmp(input, "MENUNAME"))
+		{
+			printf("%s::nameID= ", input);
+			int argument = 0;
+			scanf("%d", &argument);
+			OneArgumentFunction(_MENUNAME, input, argument, 9, 'u');
+			return 0;
+		}
+		if (!strcmp(input, "MENUTUTO"))
+		{
+			printf("%s();", input);
+			NoArgumentFunction(_MENUTUTO, input);
+			return 0;
+		}
+		if (!strcmp(input, "UNKNOWN18"))
+		{
+			printf("%s::var= ", input);
+			int argument = 0;
+			scanf("%d", &argument);
+			OneArgumentFunction(_UNKNOWN18, input, argument, 9, 'b');
+			return 0;
+		}
+		if (!strcmp(input, "MENUTIPS"))
+		{
+			printf("%s::var= ", input);
+			int argument = 0;
+			scanf("%d", &argument);
+			OneArgumentFunction(_MENUTIPS, input, argument, 9, 'i');
+			return 0;
+		}
+		if (!strcmp(input, "REST"))
+		{
+			printf("%s();", input);
+			NoArgumentFunction(_REST, input);
+			return 0;
+		}
 
 		return 1;
 	}
