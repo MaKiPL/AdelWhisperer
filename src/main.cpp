@@ -15,6 +15,7 @@ HINSTANCE gDllInstance = NULL;
 extern "C"
 {
 	int _entry = 0x00;
+	bool _bManualStack = false;
 	const int _NOP = 0x51BFB0;
 	const int _JMP = 0x51C320;
 	const int _JPF = 0x51C340;
@@ -51,6 +52,7 @@ extern "C"
 	void Start();
 	void Init();
 	void SetStackEntry();
+	void MANUALSTACK();
 	void JMP(int a1);
 	void JPF(int a1);
 	void MUSICLOAD(int music);
@@ -169,6 +171,33 @@ extern "C"
 		ENTRY = 0x0188C810;
 	}
 
+	void MANUALSTACK(int stackID)
+	{
+		_bManualStack = true;
+		printf("Activated manual stack entity entry resolver!\nUse it only when you know entityID and want to manipulate their stack/script!\nThis function is useful if you want to manipulate specific entity on map, like setmodel or turn...");
+		printf("\n\nEntity 0 will again set stack to auto resolve at every script. Entity 1 is first entity on map, usually director");
+		printf("\n\n\nType entity ID you want to use (0 for cancel): ");
+		int stackID;
+		scanf("%d", &stackID);
+		if (stackID == 0 || stackID >= 0x0A)
+		{
+			printf("Typed 0 or bigger than 0A, enabled auto stack resolver!");
+			_bManualStack = false;
+			SetStackEntry();
+			return;
+		}
+		if (*(_ENTRYPOINTER - 0x20 + (stackID-1) * 4 ) != 00)
+			ENTRY = *(_ENTRYPOINTER - 0x20 + (stackID - 1) * 4);
+		else
+		{
+			printf("Pointer for choosen entity is equal to 0. You did something wrong...");
+			printf("Enabling auto stack again and cancelling...");
+			_bManualStack = false;
+			SetStackEntry();
+			return;
+		}
+	}
+
 	void Init()
 	{
 		unsigned char* c = (unsigned char*)_MUSICLOAD;
@@ -220,13 +249,19 @@ extern "C"
 #pragma region ScriptRecognizer
 	int RecognizeScript(char input[])
 	{
-		SetStackEntry();
+		if(!_bManualStack)
+			SetStackEntry();
 		if (!strcmp(input, "MUSICLOAD"))
 		{
 			printf("\nMUSICLOAD::MusicID= ");
 			int music = 0;
 			scanf("%d", &music);
 			MUSICLOAD(music);
+			return 0;
+		}
+		if (!strcmp(input, "MANUALSTACK"))
+		{
+			MANUALSTACK();
 			return 0;
 		}
 		if (!strcmp(input, "MUSICCHANGE"))
