@@ -59,7 +59,7 @@ extern "C"
 	void SETBATTLEMUSIC(int music);
 	void BATTLE(int encounter);
 	void NoArgumentFunction(int function, char funce[]);
-	void OneArgumentFunction(int function, char funce[], int argument, byte protectionSwitch);
+	void OneArgumentFunction(int function, char funce[], unsigned int argument, byte protectionSwitch, char type);
 	void SSIGPU();
 	int SearchENTRY();
 
@@ -333,6 +333,14 @@ extern "C"
 			NoArgumentFunction(_MENUPHS, input);
 			return 0;
 		}
+		if (!strcmp(input, "MENUSHOP"))
+		{
+			printf("%s::ShopID= ", input);
+			int argument = 0;
+			scanf("%d", &argument);
+			OneArgumentFunction(_MENUSHOP, input, argument, 9, 'b');
+			return 0;
+		}
 
 
 
@@ -417,10 +425,65 @@ extern "C"
 		int result = func();
 		printf("\n%s returned: %d\n", funce,result);
 	}
-
-	void OneArgumentFunction(int function, char funce[], int argument, byte protectionSwitch)
+	
+	void OneArgumentFunction(int function, char funce[], unsigned int argument, byte protectionSwitch, char type)
 	{
-
+		byte* b = (byte*)(ENTRY + 0x184);
+		*b = protectionSwitch;
+		if (type == 'b') //Byte unsigned
+		{
+			byte* stack = (byte*)(ENTRY + *b * 4);
+			*stack = argument && 0xFF;
+			signed int(*Func)(int a1) = ((signed int(*)(int))(function + _entry));
+			int a2 = Func(ENTRY);
+			printf("\n%s returned: %d\n", funce, a2);
+			return;
+		}
+		if (type == 'i') //int signed
+		{
+			signed int* stack = (int*)(ENTRY + *b * 4);
+			*stack = (signed int)argument;
+			signed int(*Func)(int a1) = ((signed int(*)(int))(function + _entry));
+			int a2 = Func(ENTRY);
+			printf("\n%s returned: %d\n", funce, a2);
+			return;
+		}
+		if (type == 's') //int16 signed
+		{
+			short* stack = (short*)(ENTRY + *b * 4);
+			*stack = (short)(argument && 0xFFFF);
+			signed int(*Func)(int a1) = ((signed int(*)(int))(function + _entry));
+			int a2 = Func(ENTRY);
+			printf("\n%s returned: %d\n", funce, a2);
+			return;
+		}
+		if (type == 'u') //int unsigned
+		{
+			unsigned int* stack = (unsigned int*)(ENTRY + *b * 4);
+			*stack = argument;
+			signed int(*Func)(int a1) = ((signed int(*)(int))(function + _entry));
+			int a2 = Func(ENTRY);
+			printf("\n%s returned: %d\n", funce, a2);
+			return;
+		}
+		if (type == '6') //uint16
+		{
+			UINT16* stack = (UINT16*)(ENTRY + *b * 4);
+			*stack = (UINT16)(argument && 0xFFFF);
+			signed int(*Func)(int a1) = ((signed int(*)(int))(function + _entry));
+			int a2 = Func(ENTRY);
+			printf("\n%s returned: %d\n", funce, a2);
+			return;
+		}
+		if (type == 'c') //char
+		{
+			char* stack = (char*)(ENTRY + *b * 4);
+			*stack = (char)(argument && 0xFF);
+			signed int(*Func)(int a1) = ((signed int(*)(int))(function + _entry));
+			int a2 = Func(ENTRY);
+			printf("\n%s returned: %d\n", funce, a2);
+			return;
+		}
 	}
 #pragma endregion
 }
