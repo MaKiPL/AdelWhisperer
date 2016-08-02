@@ -24,6 +24,20 @@ extern "C"
 	const int _MOVIEREADY = 0x51F110;
 	const int _SETBATTLEMUSIC = 0x51F550;
 	const int _BATTLE = 0x5230C0;
+	const int _MAPJUMPON = 0x00521B00; //
+	const int _MAPJUMPOFF = 0x00521B10; 
+	const int _MAPFADEOFF = 0x00521B20;
+	const int _MAPFADEON = 0x00521B30;
+	const int _MENUDISABLE = _MAPFADEON + 0x10;
+	const int _MENUENABLE = _MENUDISABLE + 0x10;
+	const int _MENUNORMAL = _MENUENABLE + 0x10;
+	const int _MENUPHS = 0x521B90;
+	const int _MENUSHOP = 0x521BB0;
+	const int _MENUNAME = 0x521BF0;
+	const int _MENUTUTO = 0x521E60;
+	const int _UNKNOWN18 = 0x521E80;
+	const int _MENUTIPS = 0x521EC0;
+	const int _REST = 0x521EF0;
 	int* _ENTRYPOINTER = (int*)0x01D9D040;
 	int ENTRY = 0x0188C810;
 
@@ -45,6 +59,7 @@ extern "C"
 	void SETBATTLEMUSIC(int music);
 	void BATTLE(int encounter);
 	void NoArgumentFunction(int function, char funce[]);
+	void OneArgumentFunction(int function, char funce[], int argument, byte protectionSwitch);
 	void SSIGPU();
 	int SearchENTRY();
 
@@ -270,6 +285,57 @@ extern "C"
 			SSIGPU();
 			return 0;
 		}
+		if (!strcmp(input, "MAPJUMPON"))
+		{
+			printf("MAPJUMPON();");
+			NoArgumentFunction(_MAPJUMPON, input);
+			return 0;
+		}
+		if (!strcmp(input, "MAPJUMPOFF"))
+		{
+			printf("%s();", input);
+			NoArgumentFunction(_MAPJUMPOFF, input);
+			return 0;
+		}
+		if (!strcmp(input, "MAPFADEOFF"))
+		{
+			printf("%s();", input);
+			NoArgumentFunction(_MAPFADEOFF, input);
+			return 0;
+		}
+		if (!strcmp(input, "MAPFADEON"))
+		{
+			printf("%s();", input);
+			NoArgumentFunction(_MAPFADEON, input);
+			return 0;
+		}
+		if (!strcmp(input, "MENUDISABLE"))
+		{
+			printf("%s();", input);
+			NoArgumentFunction(_MENUDISABLE, input);
+			return 0;
+		}
+		if (!strcmp(input, "MENUENABLE"))
+		{
+			printf("%s();", input);
+			NoArgumentFunction(_MENUENABLE, input);
+			return 0;
+		}
+		if (!strcmp(input, "MENUNORMAL"))
+		{
+			printf("%s();", input);
+			NoArgumentFunction(_MENUNORMAL, input);
+			return 0;
+		}
+		if (!strcmp(input, "MENUPHS"))
+		{
+			printf("%s();", input);
+			NoArgumentFunction(_MENUPHS, input);
+			return 0;
+		}
+
+
+
 		return 1;
 	}
 #pragma endregion
@@ -350,6 +416,11 @@ extern "C"
 		signed int(*func)() = ((signed int(*)())(function + _entry));
 		int result = func();
 		printf("\n%s returned: %d\n", funce,result);
+	}
+
+	void OneArgumentFunction(int function, char funce[], int argument, byte protectionSwitch)
+	{
+
 	}
 #pragma endregion
 }
