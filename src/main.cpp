@@ -171,7 +171,7 @@ extern "C"
 		ENTRY = 0x0188C810;
 	}
 
-	void MANUALSTACK(int stackID)
+	void MANUALSTACK()
 	{
 		_bManualStack = true;
 		printf("Activated manual stack entity entry resolver!\nUse it only when you know entityID and want to manipulate their stack/script!\nThis function is useful if you want to manipulate specific entity on map, like setmodel or turn...");
@@ -410,6 +410,14 @@ extern "C"
 		{
 			printf("%s();", input);
 			NoArgumentFunction(_REST, input);
+			return 0;
+		}
+		if (!strcmp(input, "_CALL"))
+		{
+			printf("Sets EBP to your address, type in hex= ");
+			int argument = 0;
+			scanf("%x", &argument);
+			signed int(*Func)() = ((signed int(*)())(argument));
 			return 0;
 		}
 
