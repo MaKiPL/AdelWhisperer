@@ -418,6 +418,7 @@ extern "C"
 			int argument = 0;
 			scanf("%x", &argument);
 			signed int(*Func)() = ((signed int(*)())(argument));
+			Func();
 			return 0;
 		}
 
