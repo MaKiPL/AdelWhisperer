@@ -155,7 +155,7 @@ extern "C"
 			ENTRY = *(_ENTRYPOINTER + 8);
 			return;
 		}
-		if (*(_ENTRYPOINTER + 0xC) != 00)
+		if (*(_ENTRYPOINTER + 12) != 00)
 		{
 			ENTRY = *(_ENTRYPOINTER + 0xC);
 			return;
@@ -273,7 +273,7 @@ extern "C"
 			MUSICLOAD(music);
 			return 0;
 		}
-		if (!strcmp(input, "MANUALSTACK"))
+		if (!strcmp(input, "_MANUALSTACK"))
 		{
 			MANUALSTACK();
 			return 0;
@@ -328,7 +328,7 @@ extern "C"
 			BATTLE(music);
 			return 0;
 		}
-		if (!strcmp(input, "SSIGPU"))
+		if (!strcmp(input, "_SSIGPU"))
 		{
 			printf("Custom function: SSIGPU();");
 			SSIGPU();
