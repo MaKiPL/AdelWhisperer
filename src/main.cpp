@@ -196,7 +196,7 @@ extern "C"
 			sub         eax, 20h
 			push		edx
 			mov			edx, [adde]
-			sub			eax, edx
+			add			eax, edx
 			pop			edx
 			mov         dword ptr[entrAdd], eax
 		}
