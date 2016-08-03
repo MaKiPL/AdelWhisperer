@@ -188,8 +188,20 @@ extern "C"
 			SetStackEntry();
 			return;
 		}
-		if (*(_ENTRYPOINTER - 0x20 + (stackID-1) * 4 ) != 00)
-			ENTRY = *(_ENTRYPOINTER - 0x20 + (stackID - 1) * 4);
+		int adde = (stackID - 1) * 4;
+		int* entrAdd;
+		__asm 
+		{
+			mov         eax, dword ptr[_ENTRYPOINTER]
+			sub         eax, 20h
+			push		edx
+			mov			edx, [adde]
+			sub			eax, edx
+			pop			edx
+			mov         dword ptr[entrAdd], eax
+		}
+		if (*entrAdd != 00)
+			ENTRY = *entrAdd;
 		else
 		{
 			printf("Pointer for choosen entity is equal to 0. You did something wrong...");
