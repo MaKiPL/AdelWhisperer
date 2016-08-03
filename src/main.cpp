@@ -39,6 +39,7 @@ extern "C"
 	const int _UNKNOWN18 = 0x521E80;
 	const int _MENUTIPS = 0x521EC0;
 	const int _REST = 0x521EF0;
+	const int _SETMODEL = 0x51D740;
 	int* _ENTRYPOINTER = (int*)0x01D9D040;
 	int ENTRY = 0x0188C810;
 
@@ -63,6 +64,7 @@ extern "C"
 	void NoArgumentFunction(int function, char funce[]);
 	void OneArgumentFunction(int function, char funce[], unsigned int argument, byte protectionSwitch, char type);
 	void SSIGPU();
+	void SETMODEL(int a1, int a2);
 	int SearchENTRY();
 
 //DEF:
@@ -421,6 +423,14 @@ extern "C"
 			Func();
 			return 0;
 		}
+		if (!strcmp(input, "SETMODEL"))
+		{
+			printf("SETMODEL::");
+			int argument = 0;
+			scanf("%x", &argument);
+			SETMODEL(ENTRY, argument);
+			return 0;
+		}
 
 		return 1;
 	}
@@ -562,6 +572,14 @@ extern "C"
 			printf("\n%s returned: %d\n", funce, a2);
 			return;
 		}
+	}
+	void SETMODEL(int a1, int a2)
+	{
+		UINT16 argument = (UINT16)(a2 && 0xFFFF);
+		signed int(*Func)(int stack, UINT16 argument) = ((signed int(*)(int, UINT16))(_SETMODEL + _entry));
+		int result = Func(a1, argument);
+		printf("\nSETMODEL returned: %d\n", result);
+		return;
 	}
 #pragma endregion
 }
