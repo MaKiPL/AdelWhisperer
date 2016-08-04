@@ -217,7 +217,7 @@ extern "C"
 		int* entryStack = _ENTRYPOINTER - (0x20 / 4);
 		for (int i = 0; i != 12; i++)
 		{
-			printf("ENTITY %d: %d", i, *(entryStack + i));
+			printf("ENTITY %d: 0x%8x", i, *(entryStack + i));
 		}
 	}
 
