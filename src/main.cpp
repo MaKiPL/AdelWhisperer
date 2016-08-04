@@ -54,6 +54,7 @@ extern "C"
 	void Init();
 	void SetStackEntry();
 	void MANUALSTACK();
+	void GetEntities();
 	void JMP(int a1);
 	void JPF(int a1);
 	void MUSICLOAD(int music);
@@ -183,7 +184,7 @@ extern "C"
 		scanf("%d", &stackID);
 		if (stackID == 0 || stackID >= 0x0A)
 		{
-			printf("Typed 0 or bigger than 0A, enabled auto stack resolver!");
+			printf("Typed 0 or bigger than 0A, enabled auto stack resolver!\n");
 			_bManualStack = false;
 			SetStackEntry();
 			return;
@@ -204,13 +205,22 @@ extern "C"
 			ENTRY = *entrAdd;
 		else
 		{
-			printf("Pointer for choosen entity is equal to 0. You did something wrong...");
-			printf("Enabling auto stack again and cancelling...");
+			printf("Pointer for choosen entity is equal to 0. You did something wrong...\n");
+			printf("Enabling auto stack again and cancelling...\n");
 			_bManualStack = false;
 			SetStackEntry();
 			return;
 		}
 	}
+	void GetEntities()
+	{
+		int* entryStack = _ENTRYPOINTER - (0x20 / 4);
+		for (int i = 0; i != 12; i++)
+		{
+			printf("ENTITY %d: %d", i, *(entryStack + i));
+		}
+	}
+
 
 	void Init()
 	{
@@ -225,6 +235,7 @@ extern "C"
 
 	signed int SearchENTRY()
 	{
+		printf("AdelWhisper automatically located and calculated function locations for your FF8! :)\n");
 		size_t musicLoadB_t = sizeof(musicloadB) - 1;
 		char* buffer[2048 * 12];
 		int* startAddress = (int*)_MUSICLOAD - (2048 * 6);
@@ -276,6 +287,11 @@ extern "C"
 		if (!strcmp(input, "_MANUALSTACK"))
 		{
 			MANUALSTACK();
+			return 0;
+		}
+		if (!strcmp(input, "_GETENTITIES"))
+		{
+			GetEntities();
 			return 0;
 		}
 		if (!strcmp(input, "MUSICCHANGE"))
