@@ -215,9 +215,10 @@ extern "C"
 	void GetEntities()
 	{
 		int* entryStack = _ENTRYPOINTER - (0x20 / 4);
+		printf("\n");
 		for (int i = 0; i != 12; i++)
 		{
-			printf("ENTITY %d: 0x%8x", i, *(entryStack + i));
+			printf("ENTITY %d: 0x%08x\n", i, *(entryStack + i));
 		}
 	}
 
