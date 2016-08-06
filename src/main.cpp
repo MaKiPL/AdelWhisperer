@@ -25,7 +25,7 @@ extern "C"
 	const int _MOVIEREADY = 0x51F110;
 	const int _SETBATTLEMUSIC = 0x51F550;
 	const int _BATTLE = 0x5230C0;
-	const int _MAPJUMPON = 0x00521B00; //
+	const int _MAPJUMPON = 0x00521B00;
 	const int _MAPJUMPOFF = 0x00521B10; 
 	const int _MAPFADEOFF = 0x00521B20;
 	const int _MAPFADEON = 0x00521B30;
@@ -42,6 +42,14 @@ extern "C"
 	const int _SETMODEL = 0x51D740;
 	int* _ENTRYPOINTER = (int*)0x01D9D040;
 	int ENTRY = 0x0188C810;
+
+	//_HACK_BATTLECAMERA_
+	int _BattleCamera_WorldX = 0x00B8B7F0;
+	int _BattleCamera_WorldZ = 0x00B8B7F2;
+	int _BattleCamera_WorldY = 0x00B8B7F4;
+	int _BattleCamera_LookAtX = 0x00B8B7F8;
+	int _BattleCamera_LookAtZ = 0x00B8B7FA;
+	int _BattleCamera_LookAtY = 0x00B8B7FC;
 
 	//Entry Calculator
 	const unsigned char musicloadB[] = { 0x8B,0x54,0x24, 0x04, 0xB8, 0x01,0,0,0,0x56 };
@@ -232,6 +240,12 @@ extern "C"
 				safeHandle++;
 		_entry = safeHandle > 8 ? 0 : SearchENTRY();
 		SetStackEntry();
+		_BattleCamera_LookAtX += _entry;
+		_BattleCamera_LookAtY += _entry;
+		_BattleCamera_LookAtZ += _entry;
+		_BattleCamera_WorldX += _entry;
+		_BattleCamera_WorldZ += _entry;
+		_BattleCamera_WorldY += _entry;
 	}
 
 	signed int SearchENTRY()
@@ -458,6 +472,72 @@ extern "C"
 			int argument = 0;
 			scanf("%x", &argument);
 			SETMODEL(ENTRY, argument);
+			return 0;
+		}
+		if (!strcmp(input, "_HACK_BATTLECAMERA_WORLDX"))
+		{
+			short* pointer = (short*)_BattleCamera_WorldX;
+			float f = (float)*pointer;
+			printf("\nCurrent BattleCamera::World::X=%f", f);
+			printf("\nNew BattleCamera::World::X::(float)=");
+			float argument = 0;
+			scanf("%f", &argument);
+			*pointer = (short)argument;
+			return 0;
+		}
+		if (!strcmp(input, "_HACK_BATTLECAMERA_WORLDY"))
+		{
+			short* pointer = (short*)_BattleCamera_WorldY;
+			float f = (float)*pointer;
+			printf("\nCurrent BattleCamera::World::Y=%f", f);
+			printf("\nNew BattleCamera::World::Y::(float)=");
+			float argument = 0;
+			scanf("%f", &argument);
+			*pointer = (short)argument;
+			return 0;
+		}
+		if (!strcmp(input, "_HACK_BATTLECAMERA_WORLDZ"))
+		{
+			short* pointer = (short*)_BattleCamera_WorldZ;
+			float f = (float)*pointer;
+			printf("\nCurrent BattleCamera::World::Z=%f", f);
+			printf("\nNew BattleCamera::World::Z::(float)=");
+			float argument = 0;
+			scanf("%f", &argument);
+			*pointer = (short)argument;
+			return 0;
+		}
+		if (!strcmp(input, "_HACK_BATTLECAMERA_LOOKATX"))
+		{
+			short* pointer = (short*)_BattleCamera_LookAtX;
+			float f = (float)*pointer;
+			printf("\nCurrent BattleCamera::LookAt::X=%f", f);
+			printf("\nNew BattleCamera::LookAt::X::(float)=");
+			float argument = 0;
+			scanf("%f", &argument);
+			*pointer = (short)argument;
+			return 0;
+		}
+		if (!strcmp(input, "_HACK_BATTLECAMERA_LOOKATY"))
+		{
+			short* pointer = (short*)_BattleCamera_LookAtY;
+			float f = (float)*pointer;
+			printf("\nCurrent BattleCamera::LookAt::Y=%f", f);
+			printf("\nNew BattleCamera::LookAt::Y::(float)=");
+			float argument = 0;
+			scanf("%f", &argument);
+			*pointer = (short)argument;
+			return 0;
+		}
+		if (!strcmp(input, "_HACK_BATTLECAMERA_LOOKATZ"))
+		{
+			short* pointer = (short*)_BattleCamera_LookAtZ;
+			float f = (float)*pointer;
+			printf("\nCurrent BattleCamera::LookAt::Z=%f", f);
+			printf("\nNew BattleCamera::LookAt::Z::(float)=");
+			float argument = 0;
+			scanf("%f", &argument);
+			*pointer = (short)argument;
 			return 0;
 		}
 
