@@ -60,6 +60,7 @@ extern "C"
 	//script functions
 	void Start();
 	void Init();
+	void DisplayHELP();
 	void SetStackEntry();
 	void MANUALSTACK();
 	void GetEntities();
@@ -248,6 +249,16 @@ extern "C"
 		_BattleCamera_WorldY += _entry;
 	}
 
+	void DisplayHELP()
+	{
+		printf("\n==Welcome to AdelWhisperer!==");
+		printf("\n\t\tFor a list of scripts type _SCRIPTS");
+		printf("\n\t\tFor a list of custom commands type _CUSTOM");
+		printf("\n\t\tFor a list of hack commands type _HACK");
+		printf("\n=================================");
+		printf("\n");
+	}
+
 	signed int SearchENTRY()
 	{
 		printf("AdelWhisper automatically located and calculated function locations for your FF8! :)\n");
@@ -298,6 +309,11 @@ extern "C"
 			scanf("%d", &music);
 			MUSICLOAD(music);
 			return 0;
+		}
+		if (!strcmp(input, "_HELP") || !strcmp(input, "HELP"))
+		{
+			DisplayHELP();
+			return;
 		}
 		if (!strcmp(input, "_MANUALSTACK"))
 		{
@@ -538,6 +554,42 @@ extern "C"
 			float argument = 0;
 			scanf("%f", &argument);
 			*pointer = (short)argument;
+			return 0;
+		}
+		if (!strcmp(input, "_HACK_BATTLECAMERA_WORLD"))
+		{
+			short* pointer = (short*)_BattleCamera_WorldX;
+			float f = (float)*pointer;
+			printf("\nBattleCamera::World::X= %f", f);
+			f = (float)*(pointer+2);
+			printf("\nBattleCamera::World::Y= %f", f);
+			f = (float)*(pointer+1);
+			printf("\nBattleCamera::World::Z= %f\nNew (XYZ) coordinate system: \n", f);
+			float argument = 0;
+			scanf("%f", &argument);
+			*pointer = (short)argument;
+			scanf("%f", &argument);
+			*(pointer+2) = (short)argument;
+			scanf("%f", &argument);
+			*(pointer+1) = (short)argument;
+			return 0;
+		}
+		if (!strcmp(input, "_HACK_BATTLECAMERA_LOOKAT"))
+		{
+			short* pointer = (short*)_BattleCamera_LookAtX;
+			float f = (float)*pointer;
+			printf("\nBattleCamera::LookAt::X= %f", f);
+			f = (float)*(pointer + 2);
+			printf("\nBattleCamera::LookAt::Y= %f", f);
+			f = (float)*(pointer + 1);
+			printf("\nBattleCamera::LookAt::Z= %f\nNew (XYZ) coordinate system: \n", f);
+			float argument = 0;
+			scanf("%f", &argument);
+			*pointer = (short)argument;
+			scanf("%f", &argument);
+			*(pointer + 2) = (short)argument;
+			scanf("%f", &argument);
+			*(pointer + 1) = (short)argument;
 			return 0;
 		}
 
