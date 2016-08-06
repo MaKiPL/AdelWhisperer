@@ -2,14 +2,6 @@
 #include <cstdio>
 #include <cstring>
 #pragma warning(disable : 4996)
-
-/*
-COMP:
-0
-2,3
-B4,B5
-*/
-
 HINSTANCE gDllInstance = NULL;
 
 extern "C"
