@@ -313,7 +313,7 @@ extern "C"
 		if (!strcmp(input, "_HELP") || !strcmp(input, "HELP"))
 		{
 			DisplayHELP();
-			return;
+			return 0;
 		}
 		if (!strcmp(input, "_MANUALSTACK"))
 		{
