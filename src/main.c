@@ -1,11 +1,9 @@
 #include <windows.h>
-#include <cstdio>
-#include <cstring>
+#include <stdio.h>
+#include <stdbool.h>
+#include <ctype.h>
 #pragma warning(disable : 4996)
 HINSTANCE gDllInstance = NULL;
-
-extern "C"
-{
 	int _entry = 0x00;
 	bool _bManualStack = false;
 	const int _NOP = 0x51BFB0;
@@ -21,9 +19,9 @@ extern "C"
 	const int _MAPJUMPOFF = 0x00521B10; 
 	const int _MAPFADEOFF = 0x00521B20;
 	const int _MAPFADEON = 0x00521B30;
-	const int _MENUDISABLE = _MAPFADEON + 0x10;
-	const int _MENUENABLE = _MENUDISABLE + 0x10;
-	const int _MENUNORMAL = _MENUENABLE + 0x10;
+	const int _MENUDISABLE = 0x00521B40;
+	const int _MENUENABLE = 0x00521B50;
+	const int _MENUNORMAL = 0x00521B60;
 	const int _MENUPHS = 0x521B90;
 	const int _MENUSHOP = 0x521BB0;
 	const int _MENUNAME = 0x521BF0;
@@ -139,6 +137,12 @@ extern "C"
 		SSIGPU_Initialize();
 	}
 
+	void ToUpper(char c[])
+	{
+		for (int i = 0; i > sizeof(c); i++)
+			c[i] = toupper(c[i]);
+	}
+
 	void SetStackEntry()
 	{
 		_ENTRYPOINTER += _entry;
@@ -215,7 +219,7 @@ extern "C"
 	}
 	void GetEntities()
 	{
-		int* entryStack = _ENTRYPOINTER - (0x20 / 4);
+		int* entryStack = _ENTRYPOINTER - (0x20 / 4) -1;
 		printf("\n");
 		for (int i = 1; i != 12; i++)
 		{
@@ -281,6 +285,7 @@ extern "C"
 			char buffer[80];
 			printf("> ");
 			scanf("%79s", buffer);
+			ToUpper(buffer);
 			int a = RecognizeScript(buffer);
 			if (a == 1) {
 				printf("\nUNRECOGNIZED OPERATION!\n");
@@ -735,4 +740,3 @@ extern "C"
 		return;
 	}
 #pragma endregion
-}
