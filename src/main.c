@@ -137,9 +137,9 @@ HINSTANCE gDllInstance = NULL;
 		SSIGPU_Initialize();
 	}
 
-	void ToUpper(char c[])
+	void ToUpper(char c[], size_t size)
 	{
-		for (int i = 0; i > sizeof(c); i++)
+		for (unsigned int i = 0; i < size; i++)
 			c[i] = toupper(c[i]);
 	}
 
@@ -285,7 +285,7 @@ HINSTANCE gDllInstance = NULL;
 			char buffer[80];
 			printf("> ");
 			scanf("%79s", buffer);
-			ToUpper(buffer);
+			ToUpper(buffer, (sizeof(buffer) / sizeof(buffer[0])));
 			int a = RecognizeScript(buffer);
 			if (a == 1) {
 				printf("\nUNRECOGNIZED OPERATION!\n");
